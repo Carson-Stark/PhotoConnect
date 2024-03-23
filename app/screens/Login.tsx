@@ -20,7 +20,6 @@ const Login = () => {
         setLoading(true);
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            alert("Sign in successful");
         } catch (e) {
             console.log(e);
             alert("Sign in failed");
