@@ -8,8 +8,6 @@ import { useState } from 'react';
 import { collection, addDoc } from "firebase/firestore"; 
 
 
-
-
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

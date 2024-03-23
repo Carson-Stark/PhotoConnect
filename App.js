@@ -1,6 +1,5 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
 import Login from './app/screens/Login';
 import Home from './app/screens/Home';
 import AddImage from './app/screens/AddImage'
@@ -14,11 +13,24 @@ const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
 
 function InsideLayout() {
+  const navigation = useNavigation();
+
   return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-      <InsideStack.Screen name="AddImage" component={AddImage} options={{ headerShown: false }} />
-    </InsideStack.Navigator>
+    <View style={{ flex: 1 }}>
+      <InsideStack.Navigator>
+        <InsideStack.Screen name="Gallery" component={Home} options={{ headerShown: false }} />
+        <InsideStack.Screen name="Friends" component={AddImage} options={{ headerShown: false }} />
+      </InsideStack.Navigator>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 10 }}>
+        <Pressable style={styles.button} onPress={() => { navigation.navigate('Gallery') }}>
+          <Text  style={{ color: 'white', padding: 10 }}>Gallery</Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={() => { navigation.navigate('Friends') }}>
+          <Text  style={{ color: 'white', padding: 10 }}>Friends</Text>
+        </Pressable>
+      </View>
+    </View>
   );
 }
 
@@ -52,4 +64,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  button: {
+        marginVertical: 4,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
