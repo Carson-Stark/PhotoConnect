@@ -35,7 +35,8 @@ const Login = () => {
             await setDoc(doc(FIREBASE_DB, "users", name), {
                 email: email.toLowerCase().trim(),
                 name: name,
-                friends: []
+                friends: [],
+                images: []
             });
             
         } catch (e) {

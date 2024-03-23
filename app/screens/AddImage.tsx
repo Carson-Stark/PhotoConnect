@@ -1,53 +1,67 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Button, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Button, Pressable, PermissionsAndroid } from 'react-native';
 import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_STORAGE } from '../../FirebaseConfig';
 import { useNavigation } from '@react-navigation/native';
-// import Home from './Home';
+import ImagePicker from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import userId from '../../App'
-// import 'firebase/compat/firestore';
-// import 'firebase/compat/storage';
-// import firebase from 'firebase/compat/app';
 
 import {getDownloadURL, listAll, ref, uploadBytes} from "firebase/storage"
 import { v4 } from "uuid"
 import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
+const requestCameraPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      {
+        title: 'Cool Photo App Camera Permission',
+        message:
+          'Cool Photo App needs access to your camera ' +
+          'so you can take awesome pictures.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('You can use the camera');
+    } else {
+      console.log('Camera permission denied');
+    }
+  } catch (err) {
+    console.warn(err);
+  }
+};
+
 const AddImage = () => {
     const navigation = useNavigation();
 
-    const [image, setImage] = useState('');
-    const [imageURL, setImageURL] = useState([]);
+    const [image, setImage] = useState(null);
 
-    // const handleChange = (e)=>{
-    //     if(e.target.files[0]){
-    //         setImage(e.target.files[0])
-    //     }
-    // }
+    const openImagePicker = () => {
+        const options = {
+            mediaType: 'photo',
+            includeBase64: false,
+            maxHeight: 2000,
+            maxWidth: 2000,
+        };
 
-    const handleUpload = ()=>{
-        console.log(userId);
-        const imgRef = ref(FIREBASE_STORAGE, `files/${userId}/${v4()}`)
-        uploadBytes(imgRef, image)
-        // const uploadTask = ref(`images/test`).put(image);
-        // uploadTask.on(
-        //     "state changed",
-        //     () => {
-        //         FIREBASE_STORAGE
-        //             .ref("images")
-        //             .child()
-        //             .getDownloadURL()
-        //             .then(url => {
-        //                 FIREBASE_DB.collection("posts").add({
-        //                     imageURL: url
-        //                 })
-        //             })
-        //     }
-        // )
-        // // setcaption();
-        // setImage(null);
+        requestCameraPermission();
+        
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('Image picker error: ', response.error);
+            } else {
+                let imageUri = response.uri || response.assets?.[0]?.uri;
+                setImage(imageUri);
+            }
+        });
     }
 
-    useEffect(()=>{
+        {/*useEffect(()=>{
         listAll(ref(FIREBASE_STORAGE, "files")).then(imgs=>{
             console.log(imgs),
             imgs.items.forEach(val => {
@@ -56,9 +70,9 @@ const AddImage = () => {
                     })
             });
         })
-    }, [])
+    }, [])*/}
 
-    console.log(imageURL, "imageURL");
+    //console.log(imageURL, "imageURL");
 
     return (
         <View style={styles.container}>
@@ -66,13 +80,7 @@ const AddImage = () => {
             <Pressable style={styles.button} onPress={() => navigation.goBack()}>
                 <Text style={{ color: 'white', padding: 10 }}>Back</Text>
             </Pressable>
-            {/* <h2>Add New Post </h2>
-            <input type='file' onChange={()=>{handleChange}}/>
-            <Button onClick={handleUpload}>
-                ADD POST
-            </Button> */}
-            <input type='file' onChange={(e)=>{ setImage(e.target.files[0])}}/>
-            <button onClick={handleUpload}>Upload</button>
+            <Button title="Upload" onPress={openImagePicker} />
 
         </View>
     );
@@ -84,7 +92,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-     button: {
+    button: {
         marginVertical: 4,
         backgroundColor: 'black',
         justifyContent: 'center',
