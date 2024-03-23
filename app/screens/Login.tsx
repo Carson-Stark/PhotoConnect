@@ -5,8 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 
-import { collection, addDoc } from "firebase/firestore"; 
-
+import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -31,11 +30,13 @@ const Login = () => {
         setLoading(true);
         try {
             await createUserWithEmailAndPassword(auth, email, password);
+            const name = email.toLowerCase().trim();
 
-            const docRef = await addDoc(collection(FIREBASE_DB, "users"), {
+            await setDoc(doc(FIREBASE_DB, "users", name), {
                 email: email.toLowerCase().trim(),
-                name: "test"
-              });
+                name: name,
+                friends: []
+            });
             
         } catch (e) {
             console.log(e);
@@ -87,6 +88,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4,
         padding: 10,
-        borderColor: '#fff',
+        borderColor: 'black',
     }
 });

@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, Button, Pressable } from 'react-native';
 import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_STORAGE } from '../../FirebaseConfig';
 import { useNavigation } from '@react-navigation/native';
-import Home from './Home';
-
+// import Home from './Home';
+import userId from '../../App'
 // import 'firebase/compat/firestore';
 // import 'firebase/compat/storage';
 // import firebase from 'firebase/compat/app';
@@ -25,7 +25,8 @@ const AddImage = () => {
     // }
 
     const handleUpload = ()=>{
-        const imgRef = ref(FIREBASE_STORAGE, `files/${v4()}`)
+        console.log(userId);
+        const imgRef = ref(FIREBASE_STORAGE, `files/${userId}/${v4()}`)
         uploadBytes(imgRef, image)
         // const uploadTask = ref(`images/test`).put(image);
         // uploadTask.on(

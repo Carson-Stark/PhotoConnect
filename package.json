@@ -22,7 +22,6 @@
     "react-native-screens": "~3.29.0",
     "react-navigation-stack": "^2.10.4",
     "typescript": "^5.3.0",
-    "uuid": "^9.0.1",
     "react-native-web": "~0.19.6",
     "react-dom": "18.2.0",
     "@expo/metro-runtime": "~3.1.3"
