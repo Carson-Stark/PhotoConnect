@@ -1,9 +1,14 @@
 import { View, Text, TextInput, Button, ActivityIndicator, Pressable } from 'react-native';
 import React from 'react';
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
+
+import { collection, addDoc } from "firebase/firestore"; 
+
+
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -29,6 +34,12 @@ const Login = () => {
         setLoading(true);
         try {
             await createUserWithEmailAndPassword(auth, email, password);
+
+            const docRef = await addDoc(collection(FIREBASE_DB, "users"), {
+                email: email.toLowerCase().trim(),
+                name: "test"
+              });
+            
         } catch (e) {
             console.log(e);
             alert("Sign up failed");
