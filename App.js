@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Login from './app/screens/Login';
 import Home from './app/screens/Home';
+import AddImage from './app/screens/AddImage'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
@@ -16,6 +17,7 @@ function InsideLayout() {
   return (
     <InsideStack.Navigator>
       <InsideStack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+      <InsideStack.Screen name="AddImage" component={AddImage} options={{ headerShown: false }} />
     </InsideStack.Navigator>
   );
 }
@@ -40,6 +42,7 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
+
 }
 
 const styles = StyleSheet.create({
